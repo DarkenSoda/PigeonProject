@@ -28,7 +28,7 @@ namespace PigeonProject
         }
         public void Credits()
         {
-
+            SceneManager.LoadSceneAsync("CreditsScene");
         }
         public void ArtBook()
         {
