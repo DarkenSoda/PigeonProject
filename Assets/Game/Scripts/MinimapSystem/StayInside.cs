@@ -15,6 +15,8 @@ public class StayInside : MonoBehaviour {
             transform.position.y,
             Mathf.Clamp(transform.position.z, minimapCamera.position.z - minimapSize, minimapCamera.position.z + minimapSize)
         );
+
+        transform.rotation = minimapCamera.rotation;
     }
 
 }
