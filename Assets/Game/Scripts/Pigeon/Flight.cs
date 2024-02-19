@@ -6,62 +6,122 @@ namespace PigeonProject.Pigeon
 {
     public class Flight : MonoBehaviour
     {
+        public bool CanMove = true;
+
+        [Header("Flight")]
+        [SerializeField, Min(0)] private float flightSpeed;
+        [SerializeField, Min(0)] private float flightSpeedChangeTime;
+        [SerializeField, Min(0)] private float rotationTime;
+
+        [Header("Elevation")]
+        [SerializeField, Min(0)] private float elevationSpeed;
+        [SerializeField, Min(0)] private float elevationSpeedChangeTime;
         [SerializeField, Min(0)] private Vector2 heightRange;
-        [SerializeField] private float flightSpeed;
-        [SerializeField] private float speedChangeTime;
-        [SerializeField] private float elevationSpeed;
-        [SerializeField] private float rotationTime;
 
+        private float currentFlightSpeed = 0f;
+        private float currentElevationSpeed = 0f;
         private float targetRotation;
-        private Vector2 inputVector;
-        private Vector3 currentDirection;
-        private Vector3 moveDir;
 
-        private Rigidbody rb;
+        private Vector2 inputVector;
+
+        // private Rigidbody rb;
+        private CharacterController controller;
 
         private void Awake()
         {
-            rb = GetComponent<Rigidbody>();
-            currentDirection = transform.forward;
+            // rb = GetComponent<Rigidbody>();
+            controller = GetComponent<CharacterController>();
         }
 
         private void Update()
         {
             inputVector = GameInput.Singleton.GetDirection();
 
-            HandleRotation();
-            if (GameInput.Singleton.IsMoving)
+            if (CanMove)
             {
+                HandleSpeed();
+                HandleRotation();
                 FlyInDirection();
+                HandleElevation();
             }
             else
             {
-                StopFlying();
+                currentFlightSpeed = 0;
+                currentElevationSpeed = 0;
+            }
+
+            if (transform.position.y >= heightRange.y)
+            {
+                transform.position = new Vector3(transform.position.x, heightRange.y, transform.position.z);
+            }
+
+            if (transform.position.y <= heightRange.x)
+            {
+                transform.position = new Vector3(transform.position.x, heightRange.x, transform.position.z);
+            }
+        }
+
+        private void FixedUpdate()
+        {
+            // FlyInDirection();
+            // HandleElevation();
+        }
+
+        private void HandleSpeed()
+        {
+            UpdateFlightSpeed();
+            UpdateElevationSpeed();
+        }
+
+        private void UpdateFlightSpeed()
+        {
+            currentFlightSpeed += (GameInput.Singleton.IsMoving ? 1 : -1) * flightSpeedChangeTime * Time.deltaTime;
+            currentFlightSpeed = Mathf.Clamp(currentFlightSpeed, 0, 1);
+        }
+
+        private void UpdateElevationSpeed()
+        {
+            if (GameInput.Singleton.IsElevating || GameInput.Singleton.IsLanding)
+            {
+                currentElevationSpeed += (GameInput.Singleton.IsElevating ? 1 : -1) * elevationSpeedChangeTime * Time.deltaTime;
+                currentElevationSpeed = Mathf.Clamp(currentElevationSpeed, -1, 1);
+                return;
+            }
+
+            if (currentElevationSpeed > 0)
+            {
+                currentElevationSpeed -= elevationSpeedChangeTime * Time.deltaTime;
+                currentElevationSpeed = Mathf.Clamp(currentElevationSpeed, 0, 1);
+            }
+            else if (currentElevationSpeed < 0)
+            {
+                currentElevationSpeed += elevationSpeedChangeTime * Time.deltaTime;
+                currentElevationSpeed = Mathf.Clamp(currentElevationSpeed, -1, 0);
             }
         }
 
         private void HandleRotation()
         {
-            // Rotate according to currentRotation
-            if (rb.velocity == Vector3.zero)
-                return;
-
-            if (inputVector == Vector2.zero)
+            if (currentFlightSpeed <= 0 || inputVector == Vector2.zero)
                 return;
 
             targetRotation = Mathf.Atan2(inputVector.x, inputVector.y) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
-            moveDir = Quaternion.Euler(0f, targetRotation, 0f) * Vector3.forward;
-            currentDirection = Vector3.Slerp(currentDirection, moveDir, rotationTime * Time.deltaTime);
+            float currentRotation = 0;
+            transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref currentRotation, rotationTime);
         }
 
         private void FlyInDirection()
         {
-            rb.velocity = new Vector3(currentDirection.x, 0, currentDirection.z) * flightSpeed;
+            Vector3 flyDir = transform.forward * currentFlightSpeed * flightSpeed;
+            // rb.velocity = new Vector3(flyDir.x, rb.velocity.y, flyDir.z);
+            controller.Move(new Vector3(flyDir.x, 0, flyDir.z) * Time.deltaTime);
         }
 
-        private void StopFlying()
+        private void HandleElevation()
         {
-            rb.velocity = Vector3.Lerp(rb.velocity, Vector3.zero, speedChangeTime * Time.deltaTime);
+            float elevationForce = currentElevationSpeed * elevationSpeed;
+            // rb.velocity = new Vector3(rb.velocity.x, elevationForce, rb.velocity.z);
+            controller.Move(new Vector3(0, elevationForce, 0) * Time.deltaTime);
         }
     }
 }
