@@ -4,6 +4,7 @@ public class StayInside : MonoBehaviour {
     [SerializeField] private Transform minimapCamera;
     [SerializeField] private float minimapSize;
     private Vector3 tempVector;
+    
     private void Update() {
         tempVector = transform.parent.transform.position;
         tempVector.y = transform.position.y;
