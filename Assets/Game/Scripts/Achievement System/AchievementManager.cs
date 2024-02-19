@@ -1,21 +1,38 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
-namespace PigeonProject
+
+namespace PigeonProject.Achievement
 {
     public class AchievementManager : MonoBehaviour
     {
-        // Start is called before the first frame update
+        [Header("UI References")]
+        [SerializeField] List<Page> Pages;
+
+        [Header("Properties")]
+        [SerializeField] int currentUnlockedAct = 0;
+
         void Start()
         {
-        
+            
         }
+        
+        public void GetCurrentUnlockedPages(){
 
-        // Update is called once per frame
-        void Update()
-        {
-        
         }
+    }
+
+    [Serializable]
+    public class Page{
+        public TMP_Text Act_Text;
+        public TMP_Text SubActTitle_Text;
+        public Image image;
+        public TMP_Text Image_Text;
+        public TMP_Text Description_Text;
+
     }
 }
