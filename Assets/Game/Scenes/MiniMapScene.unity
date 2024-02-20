@@ -209,7 +209,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &229707254
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -240,6 +240,7 @@ MonoBehaviour:
   wayPoint: {fileID: 2052322205}
   followingPoints:
   - {fileID: 533575365}
+  isPlayable: 0
 --- !u!136 &229707256
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -604,7 +605,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &533575362
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -634,6 +635,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wayPoint: {fileID: 1908460213}
   followingPoints: []
+  isPlayable: 0
 --- !u!136 &533575364
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2989,6 +2991,7 @@ MonoBehaviour:
   followingPoints:
   - {fileID: 229707257}
   - {fileID: 533575365}
+  isPlayable: 1
 --- !u!1 &1740107816
 GameObject:
   m_ObjectHideFlags: 0
