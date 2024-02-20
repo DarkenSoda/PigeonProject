@@ -12,12 +12,15 @@ namespace Game.Scripts.MinimapSystem {
             transform.position = tempVector;
         }
         private void LateUpdate() {
-            transform.position = new Vector3(
-                Mathf.Clamp(transform.position.x, minimapCamera.position.x - minimapSize, minimapCamera.position.x + minimapSize),
-                transform.position.y,
-                Mathf.Clamp(transform.position.z, minimapCamera.position.z - minimapSize, minimapCamera.position.z + minimapSize)
-            );
-
+            Vector3 centerPosition = minimapCamera.transform.localPosition;
+            centerPosition.y -= 0.5f;
+            float Distance = Vector3.Distance(transform.position, centerPosition);
+            if (Distance > minimapSize)
+            {
+                Vector3 fromOriginToObject = transform.position - centerPosition;
+                fromOriginToObject *= minimapSize / Distance;
+                transform.position = centerPosition + fromOriginToObject;
+            }
             transform.rotation = minimapCamera.rotation;
         }
 

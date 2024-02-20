@@ -9,6 +9,7 @@ namespace Game.Scripts.CutsceneSystem
     {
         [SerializeField] private Image wayPoint;
         [SerializeField] private List<Transform> followingPoints;
+        [SerializeField] private bool isPlayable = false;
         private CutScene cutScene;
         private bool isCutscenePlayed = false;
 
@@ -16,15 +17,13 @@ namespace Game.Scripts.CutsceneSystem
             cutScene = GetComponent<CutScene>();
         }
         private void OnTriggerEnter(Collider other) {
-            Debug.Log(other.gameObject.tag);
-            if (!isCutscenePlayed && other.gameObject.tag == "Player") {
-                Debug.Log("Here");
+            if (isPlayable && !isCutscenePlayed && other.gameObject.tag == "Player") {
                 isCutscenePlayed = true;
-                
                 wayPoint.gameObject.SetActive(false);
                 foreach (Transform point in followingPoints) {
                     PointOfInterest pointOfInterest = point.GetComponent<PointOfInterest>();
                     pointOfInterest.wayPoint.gameObject.SetActive(true);
+                    pointOfInterest.isPlayable = true;
                 }
                 cutScene.StartCutScene();
             }
@@ -38,10 +37,12 @@ namespace Game.Scripts.CutsceneSystem
         private void OnCutsceneStart() {
             //to be made.
             Debug.Log("Cutscene started");
+            // we should make the pigeon go to the last checkpoint too continue the story.
         }
         private void OnCutsceneEnd() {
             //to be made.
             Debug.Log("Cutscene Ended");
+            //do whatever you like.
         }
     }
 }
