@@ -14,6 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageList:
   - {fileID: 5048829052745559812, guid: 862a7c3b73e0db1488611daf3a5a7617, type: 3}
+  - {fileID: 6762118277517575943, guid: 365c6595723f2cc498f8c6c0f467efcf, type: 3}
   audioList:
-  - {fileID: 8300000, guid: 388b41de2628aa24393efde95e4f5baf, type: 3}
-  isFinished: 1
+  - audioClip: {fileID: 8300000, guid: 388b41de2628aa24393efde95e4f5baf, type: 3}
+    playNextImage: 1
+    coolDownInSeconds: 3
+  - audioClip: {fileID: 8300000, guid: 3b98c3f1a9fbfa146988a510be776745, type: 3}
+    playNextImage: 1
+    coolDownInSeconds: 3

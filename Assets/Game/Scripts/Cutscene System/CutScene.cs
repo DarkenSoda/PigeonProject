@@ -69,9 +69,7 @@ namespace Game.Scripts.CutsceneSystem {
             if (isStarted) {
                 if (!audioSource.isPlaying && !isInCooldown) {
                     StartCoroutine(AudioCooldown(cutSceneSO.audioList[currentAudioIndex].coolDownInSeconds));
-            
-                    PlayNextImage();
-                    
+                    PlayNextImage();        
                     currentAudioIndex++;
                     if (currentAudioIndex >= cutSceneSO.audioList.Count) {
                         isFinished = true;
