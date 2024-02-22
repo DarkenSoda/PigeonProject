@@ -11,12 +11,15 @@ namespace Game.Scripts.CutsceneSystem {
             public AudioClip audioClip;
             public bool playNextImage;
             public int coolDownInSeconds;
+            public bool isLastImage;
         }
 
         [SerializeField] private CutSceneSO cutSceneSO;
         [SerializeField] private AudioSource audioSource;
         [SerializeField] private Transform imageContainer;
-
+        [SerializeField] private Animator UIanimator;
+        private const string CUTSCENE_TRIGGER = "CutSceneUITransition";
+        private const string ICUTSCENE_TRIGGER = "InverseCutSceneUITransition"; 
         private List<Image> imagePrefabs = new();
         private float audioCooldown;
         private int currentDisplayedImage = 0;
@@ -31,32 +34,36 @@ namespace Game.Scripts.CutsceneSystem {
                 CutSceneStartAction?.Invoke();
                 for (int i = 0; i < cutSceneSO.imageList.Count; i++) {
                     Image image = Instantiate(cutSceneSO.imageList[i], imageContainer);
+                    image.transform.localPosition = new Vector3(image.transform.localPosition.x, image.transform.localPosition.y, -10f);
                     imagePrefabs.Add(image);
                     image.gameObject.SetActive(false);
                 }
                 currentDisplayedImage = 0;
                 currentAudioIndex = 0;
                 imagePrefabs[currentDisplayedImage].gameObject.SetActive(true);
-                audioSource.clip = cutSceneSO.audioList[currentAudioIndex].audioClip;
-                audioSource.Play();
-                isStarted = true;
+                UIanimator.SetTrigger(CUTSCENE_TRIGGER);
+                StartCoroutine(WaitTheStartAnimationsEnd());
+
             }
         }
 
         public void SkipCutscene() {
             if (isStarted) {
                 audioSource.Stop();
-                isStarted = false;
-                isFinished = true;
-                CutSceneEndAction?.Invoke();
-                foreach (var image in imagePrefabs) {
-                    Destroy(image.gameObject);
-                }
+                EndCutScene();
             }
         }
 
+        private void EndCutScene() {
+            isFinished = true;
+            isStarted = false;
+            UIanimator.SetTrigger(ICUTSCENE_TRIGGER);
+            StartCoroutine(WaitTheEndAnimationsEnd());
+            CutSceneEndAction?.Invoke();
+        }
+
         private void PlayNextImage() {
-            if (cutSceneSO.audioList[currentAudioIndex].playNextImage) {   
+            if (cutSceneSO.audioList[currentAudioIndex].playNextImage && !cutSceneSO.audioList[currentAudioIndex].isLastImage) {   
                 imagePrefabs[currentDisplayedImage].gameObject.SetActive(false);
                 currentDisplayedImage++;
                 if (currentDisplayedImage >= imagePrefabs.Count) {
@@ -72,9 +79,7 @@ namespace Game.Scripts.CutsceneSystem {
                     PlayNextImage();        
                     currentAudioIndex++;
                     if (currentAudioIndex >= cutSceneSO.audioList.Count) {
-                        isFinished = true;
-                        isStarted = false;
-                        CutSceneEndAction?.Invoke();
+                        EndCutScene();
                     } else {
                         audioSource.clip = cutSceneSO.audioList[currentAudioIndex].audioClip;
                         audioSource.Play();
@@ -87,6 +92,25 @@ namespace Game.Scripts.CutsceneSystem {
             isInCooldown = true;
             yield return new WaitForSeconds(cooldownSeconds);
             isInCooldown = false;
+        }
+
+        private IEnumerator WaitTheStartAnimationsEnd() {
+            Debug.Log("waiting for the animation to end");
+            yield return new WaitForSeconds(1.3f);
+            Debug.Log("animation has ended");
+
+            audioSource.clip = cutSceneSO.audioList[currentAudioIndex].audioClip;
+            audioSource.Play();
+            isStarted = true;
+        }
+
+        private IEnumerator WaitTheEndAnimationsEnd() {
+            Debug.Log("waiting for the animation to end");
+            yield return new WaitForSeconds(1.6f);
+            Debug.Log("animation has ended");
+            foreach (var image in imagePrefabs) {
+                Destroy(image.gameObject);
+            }
         }
     }
 }

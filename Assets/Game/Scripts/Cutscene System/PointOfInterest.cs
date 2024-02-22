@@ -9,6 +9,7 @@ namespace Game.Scripts.CutsceneSystem
     {
         [SerializeField] private Image wayPoint;
         [SerializeField] private List<Transform> followingPoints;
+       
         [SerializeField] private bool isPlayable = false;
         private CutScene cutScene;
         private bool isCutscenePlayed = false;
@@ -44,5 +45,9 @@ namespace Game.Scripts.CutsceneSystem
             Debug.Log("Cutscene Ended");
             //do whatever you like.
         }
+
+
     }
+
+
 }
