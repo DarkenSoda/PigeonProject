@@ -11,7 +11,7 @@ namespace Game.Scripts.CutsceneSystem {
             public AudioClip audioClip;
             public bool playNextImage;
             public int coolDownInSeconds;
-            public bool isLastImage;
+            public bool isLastAudio;
         }
 
         [SerializeField] private CutSceneSO cutSceneSO;
@@ -63,7 +63,7 @@ namespace Game.Scripts.CutsceneSystem {
         }
 
         private void PlayNextImage() {
-            if (cutSceneSO.audioList[currentAudioIndex].playNextImage && !cutSceneSO.audioList[currentAudioIndex].isLastImage) {   
+            if (cutSceneSO.audioList[currentAudioIndex].playNextImage && !cutSceneSO.audioList[currentAudioIndex].isLastAudio) {   
                 imagePrefabs[currentDisplayedImage].gameObject.SetActive(false);
                 currentDisplayedImage++;
                 if (currentDisplayedImage >= imagePrefabs.Count) {
@@ -106,7 +106,7 @@ namespace Game.Scripts.CutsceneSystem {
 
         private IEnumerator WaitTheEndAnimationsEnd() {
             Debug.Log("waiting for the animation to end");
-            yield return new WaitForSeconds(1.6f);
+            yield return new WaitForSeconds(2f);
             Debug.Log("animation has ended");
             foreach (var image in imagePrefabs) {
                 Destroy(image.gameObject);
