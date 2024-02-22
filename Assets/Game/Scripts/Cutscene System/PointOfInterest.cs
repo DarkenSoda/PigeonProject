@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using PigeonProject.Pigeon;
+using PigeonProject.Pigeon;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,7 +11,7 @@ namespace Game.Scripts.CutsceneSystem
     {
         [SerializeField] private Image wayPoint;
         [SerializeField] private List<Transform> followingPoints;
-       
+        [SerializeField] private Flight flightSystem;
         [SerializeField] private bool isPlayable = false;
         private CutScene cutScene;
         private bool isCutscenePlayed = false;
@@ -38,11 +40,13 @@ namespace Game.Scripts.CutsceneSystem
         private void OnCutsceneStart() {
             //to be made.
             Debug.Log("Cutscene started");
+            flightSystem.CanMove = false;
             // we should make the pigeon go to the last checkpoint too continue the story.
         }
         private void OnCutsceneEnd() {
             //to be made.
             Debug.Log("Cutscene Ended");
+            flightSystem.CanMove = true;
             //do whatever you like.
         }
 

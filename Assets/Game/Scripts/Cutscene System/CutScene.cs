@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PigeonProject.Inputs;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,6 +30,11 @@ namespace Game.Scripts.CutsceneSystem {
         private bool isInCooldown = false;
         public Action CutSceneStartAction;
         public Action CutSceneEndAction;
+        
+        private void Start() {
+            Debug.Log(GameInput.Singleton);
+            GameInput.Singleton.OnCutsceneSkip += SkipCutscene;    
+        }
         public void StartCutScene() {
             if (!isFinished) {
                 CutSceneStartAction?.Invoke();
