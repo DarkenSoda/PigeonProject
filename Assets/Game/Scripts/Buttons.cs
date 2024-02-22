@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using PigeonProject.Loading;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,14 +8,23 @@ namespace PigeonProject
 {
     public class Buttons : MonoBehaviour
     {
+        [SerializeField] private Animator _mainMenuAnimator;
         [SerializeField] private GameObject mainMenu, settingMenu;
-        public void Continue()
-        {
 
-        }
-       public void NewGame()
+        void Start()
         {
-            SceneManager.LoadSceneAsync(1);
+            StartCoroutine(StartAnimation());
+        }
+
+        IEnumerator StartAnimation()
+        {
+            _mainMenuAnimator.SetBool("FadeIn" , true);
+            yield return new WaitForSeconds(1);
+            _mainMenuAnimator.SetBool("FadeIn" , false);
+        }
+        public void StartGame()
+        {
+            LoadingManager.Instance.LoadScene(1);
         }
         public void Options()
         {
@@ -28,7 +38,7 @@ namespace PigeonProject
         }
         public void Credits()
         {
-            SceneManager.LoadSceneAsync("CreditsScene");
+            LoadingManager.Instance.LoadScene("CreditsScene");
         }
         public void ArtBook()
         {
