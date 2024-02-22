@@ -23,13 +23,13 @@ namespace PigeonProject.Pigeon
         private float targetRotation;
 
         private Vector2 inputVector;
+        public Vector2 InputVector { get => inputVector; }
+        public Vector2 HeightRange { get => heightRange; }
 
-        // private Rigidbody rb;
         private CharacterController controller;
 
         private void Awake()
         {
-            // rb = GetComponent<Rigidbody>();
             controller = GetComponent<CharacterController>();
         }
 
@@ -113,14 +113,12 @@ namespace PigeonProject.Pigeon
         private void FlyInDirection()
         {
             Vector3 flyDir = transform.forward * currentFlightSpeed * flightSpeed;
-            // rb.velocity = new Vector3(flyDir.x, rb.velocity.y, flyDir.z);
             controller.Move(new Vector3(flyDir.x, 0, flyDir.z) * Time.deltaTime);
         }
 
         private void HandleElevation()
         {
             float elevationForce = currentElevationSpeed * elevationSpeed;
-            // rb.velocity = new Vector3(rb.velocity.x, elevationForce, rb.velocity.z);
             controller.Move(new Vector3(0, elevationForce, 0) * Time.deltaTime);
         }
     }
