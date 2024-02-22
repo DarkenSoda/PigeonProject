@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace PigeonProject.Inputs
@@ -8,6 +9,7 @@ namespace PigeonProject.Inputs
 
         private PlayerInputAction playerInput;
 
+        public Action OnCutsceneSkip;
         public bool IsMoving { get; private set; }
         public bool IsLanding { get; private set; }
         public bool IsElevating { get; private set; }
@@ -34,6 +36,7 @@ namespace PigeonProject.Inputs
             playerInput.Flight.Land.canceled += _ => IsLanding = false;
             playerInput.Flight.Elevate.started += _ => IsElevating = true;
             playerInput.Flight.Elevate.canceled += _ => IsElevating = false;
+            playerInput.CutScene.SkipCutScene.started += _ => OnCutsceneSkip?.Invoke();
         }
 
         public Vector2 GetDirection()

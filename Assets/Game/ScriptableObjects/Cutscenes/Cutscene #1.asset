@@ -19,6 +19,8 @@ MonoBehaviour:
   - audioClip: {fileID: 8300000, guid: 388b41de2628aa24393efde95e4f5baf, type: 3}
     playNextImage: 1
     coolDownInSeconds: 3
+    isLastImage: 0
   - audioClip: {fileID: 8300000, guid: 3b98c3f1a9fbfa146988a510be776745, type: 3}
-    playNextImage: 1
+    playNextImage: 0
     coolDownInSeconds: 3
+    isLastImage: 1

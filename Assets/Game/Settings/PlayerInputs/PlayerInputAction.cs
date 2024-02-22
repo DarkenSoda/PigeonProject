@@ -154,6 +154,34 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""CutScene"",
+            ""id"": ""79608f96-797c-43bd-9ee3-f4cefebd34bf"",
+            ""actions"": [
+                {
+                    ""name"": ""SkipCutScene"",
+                    ""type"": ""Button"",
+                    ""id"": ""495f41d5-8c42-4329-9ab2-b3870414c2f8"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Hold(duration=1)"",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""39a44049-c9d1-4dd2-b418-49ec39b945e4"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SkipCutScene"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -164,6 +192,9 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         m_Flight_Rotate = m_Flight.FindAction("Rotate", throwIfNotFound: true);
         m_Flight_Elevate = m_Flight.FindAction("Elevate", throwIfNotFound: true);
         m_Flight_Land = m_Flight.FindAction("Land", throwIfNotFound: true);
+        // CutScene
+        m_CutScene = asset.FindActionMap("CutScene", throwIfNotFound: true);
+        m_CutScene_SkipCutScene = m_CutScene.FindAction("SkipCutScene", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -291,11 +322,61 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         }
     }
     public FlightActions @Flight => new FlightActions(this);
+
+    // CutScene
+    private readonly InputActionMap m_CutScene;
+    private List<ICutSceneActions> m_CutSceneActionsCallbackInterfaces = new List<ICutSceneActions>();
+    private readonly InputAction m_CutScene_SkipCutScene;
+    public struct CutSceneActions
+    {
+        private @PlayerInputAction m_Wrapper;
+        public CutSceneActions(@PlayerInputAction wrapper) { m_Wrapper = wrapper; }
+        public InputAction @SkipCutScene => m_Wrapper.m_CutScene_SkipCutScene;
+        public InputActionMap Get() { return m_Wrapper.m_CutScene; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(CutSceneActions set) { return set.Get(); }
+        public void AddCallbacks(ICutSceneActions instance)
+        {
+            if (instance == null || m_Wrapper.m_CutSceneActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_CutSceneActionsCallbackInterfaces.Add(instance);
+            @SkipCutScene.started += instance.OnSkipCutScene;
+            @SkipCutScene.performed += instance.OnSkipCutScene;
+            @SkipCutScene.canceled += instance.OnSkipCutScene;
+        }
+
+        private void UnregisterCallbacks(ICutSceneActions instance)
+        {
+            @SkipCutScene.started -= instance.OnSkipCutScene;
+            @SkipCutScene.performed -= instance.OnSkipCutScene;
+            @SkipCutScene.canceled -= instance.OnSkipCutScene;
+        }
+
+        public void RemoveCallbacks(ICutSceneActions instance)
+        {
+            if (m_Wrapper.m_CutSceneActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(ICutSceneActions instance)
+        {
+            foreach (var item in m_Wrapper.m_CutSceneActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_CutSceneActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public CutSceneActions @CutScene => new CutSceneActions(this);
     public interface IFlightActions
     {
         void OnMove(InputAction.CallbackContext context);
         void OnRotate(InputAction.CallbackContext context);
         void OnElevate(InputAction.CallbackContext context);
         void OnLand(InputAction.CallbackContext context);
+    }
+    public interface ICutSceneActions
+    {
+        void OnSkipCutScene(InputAction.CallbackContext context);
     }
 }
