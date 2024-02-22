@@ -1,12 +1,5 @@
 {
   "dependencies": {
-    "com.darkensoda.customunitytools": {
-      "version": "https://github.com/DarkenSoda/Custom-Unity-Tools.git",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "52b9030a2818c4f1bb04ac887f9f11ef97101ff6"
-    },
     "com.unity.addressables": {
       "version": "1.21.19",
       "depth": 1,
