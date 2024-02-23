@@ -1,9 +1,10 @@
 using System;
 using UnityEngine;
+using PigeonProject.Patterns;
 
 namespace PigeonProject.Inputs
 {
-    public class GameInput : MonoBehaviour
+    public class GameInput : Singleton<GameInput>
     {
         public static GameInput Singleton { get; private set; }
 

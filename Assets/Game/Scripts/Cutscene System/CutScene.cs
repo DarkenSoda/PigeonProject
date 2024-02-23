@@ -27,7 +27,7 @@ namespace Game.Scripts.CutsceneSystem {
         private int currentAudioIndex = 0;
         private bool isStarted = false;
         private bool isFinished = false;
-        private bool isInCooldown = false;
+        [SerializeField] private bool isInCooldown = false;
         public Action CutSceneStartAction;
         public Action CutSceneEndAction;
         
@@ -79,6 +79,7 @@ namespace Game.Scripts.CutsceneSystem {
             }
         }
         private void Update() {
+
             if (isStarted) {
                 if (!audioSource.isPlaying && !isInCooldown) {
                     StartCoroutine(AudioCooldown(cutSceneSO.audioList[currentAudioIndex].coolDownInSeconds));

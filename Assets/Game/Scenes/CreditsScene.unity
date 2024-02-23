@@ -2247,6 +2247,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e01f4e8c088436747a42f1f6afc7ec15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _endTimer: 108
 --- !u!1 &596321626
 GameObject:
   m_ObjectHideFlags: 0
@@ -3304,9 +3305,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Wings of
+  m_text: 'Peace
 
-    Unity'
+    Treaty'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1c4aeef9e2f63404ba348e65743360b8, type: 2}
   m_sharedMaterial: {fileID: -1760016566167490470, guid: 1c4aeef9e2f63404ba348e65743360b8,

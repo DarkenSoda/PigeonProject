@@ -13,6 +13,9 @@ namespace PigeonProject
 
         void Start()
         {
+            if(_mainMenuAnimator == null){
+                _mainMenuAnimator = GameObject.Find("MainMenu").GetComponent<Animator>();
+            }
             StartCoroutine(StartAnimation());
         }
 

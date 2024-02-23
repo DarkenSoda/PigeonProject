@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using PigeonProject.Pigeon;
-using PigeonProject.Pigeon;
 using UnityEngine;
 using UnityEngine.UI;
 

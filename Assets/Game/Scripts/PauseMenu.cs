@@ -1,6 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
+using PigeonProject.Consts;
+using PigeonProject.Loading;
+using PigeonProject.Manager;
 using UnityEngine;
 
 namespace PigeonProject
@@ -34,7 +34,10 @@ namespace PigeonProject
         }
         public void SaveAndExit()
         {
+            Time.timeScale = 1;
             
+            PlayerPrefs.SetInt(Const.CHECKPOINT , GameManager.Instance.CurrentCheckpoint);
+            LoadingManager.Instance.LoadScene(0);
         }
         public void Apply()
         {
