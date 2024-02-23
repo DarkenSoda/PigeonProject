@@ -5,6 +5,7 @@ using DG.Tweening;
 using PigeonProject.Inputs;
 using PigeonProject.LandingArea;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Splines;
 
 namespace PigeonProject.Pigeon
@@ -15,13 +16,17 @@ namespace PigeonProject.Pigeon
         [SerializeField] private float detectionRadius;
         [SerializeField] private float maxAngle;
         [SerializeField] private LayerMask landingPointMask;
+        [SerializeField] private ParticleSystem poofParticles;
 
         private PigeonAnimation anim;
         private SplineAnimate splineAnim;
+        private Vector3 targetForward;
         private Transform nearestLandingPoint = null;
         public Transform NearestLandingPoint { get => nearestLandingPoint; }
+        public Action OnGrounded;
 
         public bool IsGrounded { get; set; }
+        public bool IsLanding { get; set; }
 
         private void Awake()
         {
@@ -31,7 +36,7 @@ namespace PigeonProject.Pigeon
 
         private void Start()
         {
-            GameInput.Singleton.OnInteract += StartLanding;
+            GameInput.Singleton.OnInteract += OnInteract;
         }
 
         private void Update()
@@ -42,7 +47,15 @@ namespace PigeonProject.Pigeon
 
             nearestLandingPoint = orderedPoints.Length > 0 ? orderedPoints[0].transform : null;
 
-            AdjustSpline();
+            // AdjustSpline();
+            if (nearestLandingPoint && !IsLanding)
+            {
+                // Show UI at nearestPoint.GetComponent<LandingPoint>().LandingPosition;
+            }
+            else
+            {
+                // Hide UI
+            }
         }
 
         private bool IsInFront(Collider target)
@@ -54,13 +67,16 @@ namespace PigeonProject.Pigeon
 
         private void AdjustSpline()
         {
-            if (!nearestLandingPoint)
-            {
-                splineAnim.Container = null;
-                return;
-            }
-
             Vector3 directionFromPlayer = nearestLandingPoint.position - transform.position;
+            Vector3 directionFroward = new Vector3(directionFromPlayer.x, 0, directionFromPlayer.z);
+            if (Mathf.Abs(Vector3.Angle(directionFroward, nearestLandingPoint.forward)) > 90)
+            {
+                targetForward = -nearestLandingPoint.forward;
+            }
+            else
+            {
+                targetForward = nearestLandingPoint.forward;
+            }
             Transform spline = nearestLandingPoint.GetComponent<LandingPoint>().Spline;
             spline.eulerAngles = new Vector3(0, Mathf.Atan2(directionFromPlayer.x, directionFromPlayer.z) * Mathf.Rad2Deg, 0);
             SetSplineAnimate(spline);
@@ -75,11 +91,46 @@ namespace PigeonProject.Pigeon
             splineAnim.Container = container;
         }
 
+        private void OnInteract()
+        {
+            if (IsGrounded)
+            {
+                TakeOff();
+            }
+            else
+            {
+                StartLanding();
+            }
+        }
+
+        private void TakeOff()
+        {
+            Sequence sequence = DOTween.Sequence();
+            sequence.Append(transform.DOMove(transform.position + (transform.forward + Vector3.up) * 3.5f , .8f));
+            sequence.AppendCallback(EndTakeOff);
+
+            poofParticles.Play();
+            anim.StartMoving();
+            sequence.Play();
+        }
+
+        private void EndTakeOff()
+        {
+            IsGrounded = false;
+            IsLanding = false;
+            anim.OnTakeOff();
+            GetComponent<Flight>().CanMove = true;
+        }
+
         private void StartLanding()
         {
-            if (!nearestLandingPoint)
+            if (!nearestLandingPoint || IsLanding)
                 return;
 
+            IsLanding = true;
+            AdjustSpline();
+
+            anim.ResetRotationImmediate();
             Sequence sequence = DOTween.Sequence();
             Vector3 pos = splineAnim.Container.transform.TransformPoint(splineAnim.Container.Spline.ToArray()[0].Position);
             sequence.Append(transform.DOLookAt(pos, .3f, AxisConstraint.Y, Vector3.up));
@@ -105,9 +156,12 @@ namespace PigeonProject.Pigeon
                 yield return null;
             }
 
+            transform.DORotateQuaternion(Quaternion.LookRotation(targetForward), .3f);
             anim.IdleDuration = 0;
             anim.OnGrounded();
             IsGrounded = true;
+
+            OnGrounded?.Invoke();
         }
     }
 }

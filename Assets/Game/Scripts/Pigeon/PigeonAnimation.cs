@@ -209,9 +209,15 @@ namespace PigeonProject.Pigeon
         {
             anim.CrossFade(FLYFORWARD, .1f, 0, 0);
         }
+
         public void StartLanding()
         {
             anim.CrossFade(FLYFORWARD, .1f, 0, 0);
+        }
+
+        public void ResetRotationImmediate()
+        {
+            transform.rotation = new Quaternion(0, 0, 0, 0);
         }
     }
 }
