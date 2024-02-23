@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,5 +9,6 @@ namespace Game.Scripts.CutsceneSystem
     public class CutSceneSO : ScriptableObject {
         public List<Image> imageList;
         public List<CutScene.Audio> audioList;
+        
     }
 }

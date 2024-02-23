@@ -13,11 +13,17 @@ namespace Game.Scripts.CutsceneSystem
         [SerializeField] private List<Transform> followingPoints;
         [SerializeField] private Flight flightSystem;
         [SerializeField] private bool isPlayable = false;
+        [SerializeField] private LandingDetection landingDetection;
         private CutScene cutScene;
         private bool isCutscenePlayed = false;
 
         private void Awake() {
             cutScene = GetComponent<CutScene>();
+        }
+        private void Start() {
+            landingDetection.OnGrounded += cutScene.StartCutScene;
+            cutScene.CutSceneStartAction += OnCutsceneStart;
+            cutScene.CutSceneEndAction.AddListener(OnCutsceneEnd);
         }
         private void OnTriggerEnter(Collider other) {
             if (isPlayable && !isCutscenePlayed && other.gameObject.tag == "Player") {
@@ -30,7 +36,6 @@ namespace Game.Scripts.CutsceneSystem
                     pointOfInterest.sunRay.SetActive(true);
                     pointOfInterest.isPlayable = true;
                 }
-                cutScene.StartCutScene();
             }
         }
 
@@ -38,11 +43,6 @@ namespace Game.Scripts.CutsceneSystem
             wayPoint.gameObject.SetActive(true);
             sunRay.SetActive(true);
             isPlayable = true;
-        }
-
-        private void Start() {
-            cutScene.CutSceneStartAction += OnCutsceneStart;
-            cutScene.CutSceneEndAction.AddListener(OnCutsceneEnd);
         }
 
         private void OnCutsceneStart() {

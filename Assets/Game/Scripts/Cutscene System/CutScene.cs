@@ -14,6 +14,7 @@ namespace Game.Scripts.CutsceneSystem {
             public bool playNextImage;
             public int coolDownInSeconds;
             public bool isLastAudio;
+            public List<String> AudioText;
         }
 
         [SerializeField] private CutSceneSO cutSceneSO;
@@ -31,6 +32,7 @@ namespace Game.Scripts.CutsceneSystem {
         [SerializeField] private bool isInCooldown = false;
         public Action CutSceneStartAction;
         public UnityEvent CutSceneEndAction;
+        public Action<int> DisplayedTextEvent;
         
         private void Start() {
             Debug.Log(GameInput.Singleton);
@@ -91,6 +93,7 @@ namespace Game.Scripts.CutsceneSystem {
                     } else {
                         audioSource.clip = cutSceneSO.audioList[currentAudioIndex].audioClip;
                         audioSource.Play();
+                        DisplayedTextEvent?.Invoke(currentAudioIndex);
                     }
                 } 
             }
@@ -109,6 +112,7 @@ namespace Game.Scripts.CutsceneSystem {
 
             audioSource.clip = cutSceneSO.audioList[currentAudioIndex].audioClip;
             audioSource.Play();
+            DisplayedTextEvent?.Invoke(currentAudioIndex);
             isStarted = true;
         }
 
@@ -119,6 +123,10 @@ namespace Game.Scripts.CutsceneSystem {
             foreach (var image in imagePrefabs) {
                 Destroy(image.gameObject);
             }
+        }
+
+        public CutSceneSO getCutSceneSO() {
+            return cutSceneSO;
         }
     }
 }

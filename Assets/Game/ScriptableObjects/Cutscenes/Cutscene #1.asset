@@ -19,8 +19,14 @@ MonoBehaviour:
   - audioClip: {fileID: 8300000, guid: 388b41de2628aa24393efde95e4f5baf, type: 3}
     playNextImage: 1
     coolDownInSeconds: 3
-    isLastImage: 0
+    isLastAudio: 0
+    AudioText:
+    - I have to stop this.
+    - This is Silly.
+    - Sheesh
   - audioClip: {fileID: 8300000, guid: 3b98c3f1a9fbfa146988a510be776745, type: 3}
     playNextImage: 0
     coolDownInSeconds: 3
-    isLastImage: 1
+    isLastAudio: 0
+    AudioText:
+    - Dum Dum 3al klam

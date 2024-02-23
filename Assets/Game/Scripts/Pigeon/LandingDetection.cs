@@ -17,11 +17,11 @@ namespace PigeonProject.Pigeon
         [SerializeField] private float maxAngle;
         [SerializeField] private LayerMask landingPointMask;
         [SerializeField] private ParticleSystem poofParticles;
-
         private PigeonAnimation anim;
         private SplineAnimate splineAnim;
         private Vector3 targetForward;
         private Transform nearestLandingPoint = null;
+        private Transform landingPointUI = null;
         public Transform NearestLandingPoint { get => nearestLandingPoint; }
         public Action OnGrounded;
 
@@ -47,14 +47,17 @@ namespace PigeonProject.Pigeon
 
             nearestLandingPoint = orderedPoints.Length > 0 ? orderedPoints[0].transform : null;
 
-            // AdjustSpline();
             if (nearestLandingPoint && !IsLanding)
             {
-                // Show UI at nearestPoint.GetComponent<LandingPoint>().LandingPosition;
+                LandingPoint landingPoint = nearestLandingPoint.GetComponent<LandingPoint>();
+                landingPointUI = landingPoint.landingPointUIPosition;
+                landingPointUI.gameObject.SetActive(true);
+                landingPointUI.position = landingPoint.LandingPosition.position;
+                landingPointUI.LookAt(Camera.main.transform);
             }
             else
             {
-                // Hide UI
+                landingPointUI?.gameObject.SetActive(false);
             }
         }
 
