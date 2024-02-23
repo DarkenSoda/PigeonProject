@@ -28,15 +28,6 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
             ""id"": ""050fae35-5d27-49fa-8cf5-55157f7dc57b"",
             ""actions"": [
                 {
-                    ""name"": ""Move"",
-                    ""type"": ""Button"",
-                    ""id"": ""9bd3b5d9-93ad-4afa-bc20-53a7eae278a7"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Rotate"",
                     ""type"": ""Value"",
                     ""id"": ""033217be-47d3-4c64-aa89-508e077d6eb6"",
@@ -65,17 +56,6 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                 }
             ],
             ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""1e0d2b95-0f0b-488c-abfd-84a2674b59fa"",
-                    ""path"": ""<Keyboard>/space"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
                 {
                     ""name"": ""WASD"",
                     ""id"": ""b5dca911-bec0-4b1b-96cc-36a0b45f8233"",
@@ -134,7 +114,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""4fa25cd4-97f9-4b1e-87e6-a9a755282f74"",
-                    ""path"": ""<Keyboard>/e"",
+                    ""path"": ""<Keyboard>/shift"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -145,7 +125,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""78345a9a-8b43-435f-bf2f-cb85a396c4a9"",
-                    ""path"": ""<Keyboard>/q"",
+                    ""path"": ""<Keyboard>/ctrl"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -182,19 +162,49 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Interaction"",
+            ""id"": ""55339e43-cd94-4e36-b50b-1deb46f040f1"",
+            ""actions"": [
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""e33b6229-4dfc-4972-8713-384e717f18fe"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""b6c334ff-2bcb-42ba-a847-ade10712bc2b"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
 }");
         // Flight
         m_Flight = asset.FindActionMap("Flight", throwIfNotFound: true);
-        m_Flight_Move = m_Flight.FindAction("Move", throwIfNotFound: true);
         m_Flight_Rotate = m_Flight.FindAction("Rotate", throwIfNotFound: true);
         m_Flight_Elevate = m_Flight.FindAction("Elevate", throwIfNotFound: true);
         m_Flight_Land = m_Flight.FindAction("Land", throwIfNotFound: true);
         // CutScene
         m_CutScene = asset.FindActionMap("CutScene", throwIfNotFound: true);
         m_CutScene_SkipCutScene = m_CutScene.FindAction("SkipCutScene", throwIfNotFound: true);
+        // Interaction
+        m_Interaction = asset.FindActionMap("Interaction", throwIfNotFound: true);
+        m_Interaction_Interact = m_Interaction.FindAction("Interact", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -256,7 +266,6 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
     // Flight
     private readonly InputActionMap m_Flight;
     private List<IFlightActions> m_FlightActionsCallbackInterfaces = new List<IFlightActions>();
-    private readonly InputAction m_Flight_Move;
     private readonly InputAction m_Flight_Rotate;
     private readonly InputAction m_Flight_Elevate;
     private readonly InputAction m_Flight_Land;
@@ -264,7 +273,6 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
     {
         private @PlayerInputAction m_Wrapper;
         public FlightActions(@PlayerInputAction wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Move => m_Wrapper.m_Flight_Move;
         public InputAction @Rotate => m_Wrapper.m_Flight_Rotate;
         public InputAction @Elevate => m_Wrapper.m_Flight_Elevate;
         public InputAction @Land => m_Wrapper.m_Flight_Land;
@@ -277,9 +285,6 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_FlightActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_FlightActionsCallbackInterfaces.Add(instance);
-            @Move.started += instance.OnMove;
-            @Move.performed += instance.OnMove;
-            @Move.canceled += instance.OnMove;
             @Rotate.started += instance.OnRotate;
             @Rotate.performed += instance.OnRotate;
             @Rotate.canceled += instance.OnRotate;
@@ -293,9 +298,6 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
 
         private void UnregisterCallbacks(IFlightActions instance)
         {
-            @Move.started -= instance.OnMove;
-            @Move.performed -= instance.OnMove;
-            @Move.canceled -= instance.OnMove;
             @Rotate.started -= instance.OnRotate;
             @Rotate.performed -= instance.OnRotate;
             @Rotate.canceled -= instance.OnRotate;
@@ -368,9 +370,54 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         }
     }
     public CutSceneActions @CutScene => new CutSceneActions(this);
+
+    // Interaction
+    private readonly InputActionMap m_Interaction;
+    private List<IInteractionActions> m_InteractionActionsCallbackInterfaces = new List<IInteractionActions>();
+    private readonly InputAction m_Interaction_Interact;
+    public struct InteractionActions
+    {
+        private @PlayerInputAction m_Wrapper;
+        public InteractionActions(@PlayerInputAction wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Interact => m_Wrapper.m_Interaction_Interact;
+        public InputActionMap Get() { return m_Wrapper.m_Interaction; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(InteractionActions set) { return set.Get(); }
+        public void AddCallbacks(IInteractionActions instance)
+        {
+            if (instance == null || m_Wrapper.m_InteractionActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_InteractionActionsCallbackInterfaces.Add(instance);
+            @Interact.started += instance.OnInteract;
+            @Interact.performed += instance.OnInteract;
+            @Interact.canceled += instance.OnInteract;
+        }
+
+        private void UnregisterCallbacks(IInteractionActions instance)
+        {
+            @Interact.started -= instance.OnInteract;
+            @Interact.performed -= instance.OnInteract;
+            @Interact.canceled -= instance.OnInteract;
+        }
+
+        public void RemoveCallbacks(IInteractionActions instance)
+        {
+            if (m_Wrapper.m_InteractionActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IInteractionActions instance)
+        {
+            foreach (var item in m_Wrapper.m_InteractionActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_InteractionActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public InteractionActions @Interaction => new InteractionActions(this);
     public interface IFlightActions
     {
-        void OnMove(InputAction.CallbackContext context);
         void OnRotate(InputAction.CallbackContext context);
         void OnElevate(InputAction.CallbackContext context);
         void OnLand(InputAction.CallbackContext context);
@@ -378,5 +425,9 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
     public interface ICutSceneActions
     {
         void OnSkipCutScene(InputAction.CallbackContext context);
+    }
+    public interface IInteractionActions
+    {
+        void OnInteract(InputAction.CallbackContext context);
     }
 }
