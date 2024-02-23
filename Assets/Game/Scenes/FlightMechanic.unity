@@ -946,7 +946,7 @@ PrefabInstance:
     - target: {fileID: 638584120030799359, guid: 2ac97b7fef6c8bd4199ac2380479fc5c,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 29.310001
+      value: 3.54
       objectReference: {fileID: 0}
     - target: {fileID: 638584120030799359, guid: 2ac97b7fef6c8bd4199ac2380479fc5c,
         type: 3}
@@ -961,17 +961,17 @@ PrefabInstance:
     - target: {fileID: 638584120030799359, guid: 2ac97b7fef6c8bd4199ac2380479fc5c,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 638584120030799359, guid: 2ac97b7fef6c8bd4199ac2380479fc5c,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 638584120030799359, guid: 2ac97b7fef6c8bd4199ac2380479fc5c,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 638584120030799359, guid: 2ac97b7fef6c8bd4199ac2380479fc5c,
         type: 3}
@@ -998,6 +998,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2ac97b7fef6c8bd4199ac2380479fc5c, type: 3}
+--- !u!114 &516092587309666811 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1830138565390262294, guid: 2ac97b7fef6c8bd4199ac2380479fc5c,
+    type: 3}
+  m_PrefabInstance: {fileID: 516092587309666810}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dab5c7d4c32e743048dfca98e2d5914f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1293180233606473732
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1070,16 +1082,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6118631065081559215, guid: 2efb8332ec699ac449751f2e55636a15,
-        type: 3}
-      propertyPath: heightRange.x
-      value: 18
-      objectReference: {fileID: 0}
-    - target: {fileID: 6118631065081559215, guid: 2efb8332ec699ac449751f2e55636a15,
-        type: 3}
-      propertyPath: heightRange.y
-      value: 37
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1232,5 +1234,5 @@ SceneRoots:
   - {fileID: 1888097418}
   - {fileID: 209191445}
   - {fileID: 1293180233606473732}
-  - {fileID: 516092587309666810}
   - {fileID: 5962489399339186803}
+  - {fileID: 516092587309666810}

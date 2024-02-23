@@ -13,8 +13,14 @@ namespace PigeonProject.Pigeon
         [SerializeField] private float maxAngle;
         [SerializeField] private LayerMask landingPointMask;
 
+        private SplineAnimate anim;
         private Transform nearestLandingPoint = null;
         public Transform NearestLandingPoint { get => nearestLandingPoint; }
+
+        private void Awake()
+        {
+            anim = GetComponent<SplineAnimate>();
+        }
 
         private void Update()
         {
@@ -37,11 +43,24 @@ namespace PigeonProject.Pigeon
         private void AdjustSpline()
         {
             if (!nearestLandingPoint)
+            {
+                anim.Container = null;
                 return;
+            }
 
             Vector3 directionFromPlayer = nearestLandingPoint.position - transform.position;
             Transform spline = nearestLandingPoint.GetComponent<LandingPoint>().Spline;
             spline.eulerAngles = new Vector3(0, Mathf.Atan2(directionFromPlayer.x, directionFromPlayer.z) * Mathf.Rad2Deg, 0);
+            SetSplineAnimate(spline);
+        }
+
+        private void SetSplineAnimate(Transform spline)
+        {
+            SplineContainer container = spline.GetComponent<SplineContainer>();
+            if (anim.Container == container)
+                return;
+
+            anim.Container = container;
         }
     }
 }

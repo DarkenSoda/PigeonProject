@@ -6,15 +6,6 @@
             "id": "050fae35-5d27-49fa-8cf5-55157f7dc57b",
             "actions": [
                 {
-                    "name": "Move",
-                    "type": "Button",
-                    "id": "9bd3b5d9-93ad-4afa-bc20-53a7eae278a7",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Rotate",
                     "type": "Value",
                     "id": "033217be-47d3-4c64-aa89-508e077d6eb6",
@@ -43,17 +34,6 @@
                 }
             ],
             "bindings": [
-                {
-                    "name": "",
-                    "id": "1e0d2b95-0f0b-488c-abfd-84a2674b59fa",
-                    "path": "<Keyboard>/space",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
                 {
                     "name": "WASD",
                     "id": "b5dca911-bec0-4b1b-96cc-36a0b45f8233",
@@ -112,7 +92,7 @@
                 {
                     "name": "",
                     "id": "4fa25cd4-97f9-4b1e-87e6-a9a755282f74",
-                    "path": "<Keyboard>/e",
+                    "path": "<Keyboard>/shift",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -123,7 +103,7 @@
                 {
                     "name": "",
                     "id": "78345a9a-8b43-435f-bf2f-cb85a396c4a9",
-                    "path": "<Keyboard>/q",
+                    "path": "<Keyboard>/ctrl",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -156,6 +136,34 @@
                     "processors": "",
                     "groups": "",
                     "action": "SkipCutScene",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Interaction",
+            "id": "55339e43-cd94-4e36-b50b-1deb46f040f1",
+            "actions": [
+                {
+                    "name": "Interact",
+                    "type": "Button",
+                    "id": "e33b6229-4dfc-4972-8713-384e717f18fe",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "b6c334ff-2bcb-42ba-a847-ade10712bc2b",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
