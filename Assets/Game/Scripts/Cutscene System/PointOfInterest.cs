@@ -9,6 +9,7 @@ namespace Game.Scripts.CutsceneSystem
     public class PointOfInterest : MonoBehaviour
     {
         [SerializeField] private Image wayPoint;
+        [SerializeField] private GameObject sunRay;
         [SerializeField] private List<Transform> followingPoints;
         [SerializeField] private Flight flightSystem;
         [SerializeField] private bool isPlayable = false;
@@ -22,18 +23,26 @@ namespace Game.Scripts.CutsceneSystem
             if (isPlayable && !isCutscenePlayed && other.gameObject.tag == "Player") {
                 isCutscenePlayed = true;
                 wayPoint.gameObject.SetActive(false);
+                sunRay.SetActive(false);
                 foreach (Transform point in followingPoints) {
                     PointOfInterest pointOfInterest = point.GetComponent<PointOfInterest>();
                     pointOfInterest.wayPoint.gameObject.SetActive(true);
+                    pointOfInterest.sunRay.SetActive(true);
                     pointOfInterest.isPlayable = true;
                 }
                 cutScene.StartCutScene();
             }
         }
 
+        public void Initialize(){
+            wayPoint.gameObject.SetActive(true);
+            sunRay.SetActive(true);
+            isPlayable = true;
+        }
+
         private void Start() {
             cutScene.CutSceneStartAction += OnCutsceneStart;
-            cutScene.CutSceneEndAction += OnCutsceneEnd;
+            cutScene.CutSceneEndAction.AddListener(OnCutsceneEnd);
         }
 
         private void OnCutsceneStart() {

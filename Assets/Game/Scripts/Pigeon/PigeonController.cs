@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using PigeonProject.Manager;
 
@@ -12,10 +10,11 @@ namespace PigeonProject.Pigeon
 
         public void SetCustomSpeed(float speed){
             //adding custom speed for tempry time //w
-        }
+        }   
 
         void OnCollisionEnter(Collision other)
         {
+            Debug.Log("Collided with " + other.gameObject.name);
             GameManager.Instance.DeathScreen();
         }
     }

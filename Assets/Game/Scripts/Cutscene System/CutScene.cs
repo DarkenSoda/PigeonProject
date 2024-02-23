@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using PigeonProject.Inputs;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace Game.Scripts.CutsceneSystem {
@@ -29,7 +30,7 @@ namespace Game.Scripts.CutsceneSystem {
         private bool isFinished = false;
         [SerializeField] private bool isInCooldown = false;
         public Action CutSceneStartAction;
-        public Action CutSceneEndAction;
+        public UnityEvent CutSceneEndAction;
         
         private void Start() {
             Debug.Log(GameInput.Singleton);

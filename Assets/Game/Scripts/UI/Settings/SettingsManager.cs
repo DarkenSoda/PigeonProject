@@ -18,7 +18,12 @@ namespace PigeonProject.UI.Settings
         [SerializeField] Slider _musicVolume;
         [SerializeField] Slider _sfxVolume;
 
+        void Start()
+        {
+            _graphicsDropdown.value = QualitySettings.GetQualityLevel();
+        }
         public void ChangeGraphicsQuality(){
+            
             QualitySettings.SetQualityLevel(_graphicsDropdown.value);
         }
 
