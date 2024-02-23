@@ -9,12 +9,14 @@ namespace PigeonProject.Pigeon
         private string[] GroundedAnimations;
         private const string GROUND1 = "Ground1";
         private const string GROUND2 = "Ground2";
+        private const string FLYFORWARD = "FlyForward";
         private const string CANMOVE = "CanMove";
         private const string ISMOVING = "IsMoving";
         private const string ISLANDING = "IsLanding";
         private const string ISELEVATING = "IsElevating";
         private const string FLYIDLE = "FlyIdle";
-        private bool IsIdle;
+        private const string ISIDLE = "IsIdle";
+        public bool IsIdle { get; set; }
         private bool IsMoving;
         private bool FlyIdle;
         private bool CanMove;
@@ -28,14 +30,14 @@ namespace PigeonProject.Pigeon
         [SerializeField] private float flyIdleDurationMax;
         [SerializeField] private GameObject leftTrail;
         [SerializeField] private GameObject rightTrail;
-        private float idleDuration;
+        public float IdleDuration { get; set; }
 
         private void Awake()
         {
             anim = GetComponent<Animator>();
             flight = GetComponentInParent<Flight>();
             GroundedAnimations = new string[2] { GROUND1, GROUND2 };
-            idleDuration = 0;
+            IdleDuration = 0;
 
             DisableTrail();
             StartCoroutine(FlyIdleCoroutine());
@@ -56,9 +58,9 @@ namespace PigeonProject.Pigeon
 
         private void Update()
         {
-            if (idleDuration > 0)
+            if (IdleDuration > 0)
             {
-                idleDuration -= Time.deltaTime;
+                IdleDuration -= Time.deltaTime;
             }
 
             CanMove = flight.CanMove;
@@ -69,9 +71,9 @@ namespace PigeonProject.Pigeon
             anim.SetBool(CANMOVE, CanMove);
             anim.SetBool(ISMOVING, IsMoving && CanMove);
 
-            if (IsIdle && idleDuration <= 0)
+            if (IsIdle && IdleDuration <= 0)
             {
-                idleDuration = idleDurationMax;
+                IdleDuration = idleDurationMax;
                 int num = Random.Range(0, 2);
                 anim.CrossFade(GroundedAnimations[num], 0.15f, 0, 0);
             }
@@ -182,11 +184,13 @@ namespace PigeonProject.Pigeon
         public void OnGrounded()
         {
             IsIdle = true;
+            anim.SetBool(ISIDLE, true);
         }
 
         public void OnTakeOff()
         {
             IsIdle = false;
+            anim.SetBool(ISIDLE, false);
         }
 
         private void EnableTrail()
@@ -199,6 +203,15 @@ namespace PigeonProject.Pigeon
         {
             leftTrail.SetActive(false);
             rightTrail.SetActive(false);
+        }
+
+        public void StartMoving()
+        {
+            anim.CrossFade(FLYFORWARD, .1f, 0, 0);
+        }
+        public void StartLanding()
+        {
+            anim.CrossFade(FLYFORWARD, .1f, 0, 0);
         }
     }
 }

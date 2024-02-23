@@ -820,7 +820,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationTime: 0.04
-  idleDurationMax: 5
+  idleDurationMax: 3
   flyIdleDurationMax: 3
   leftTrail: {fileID: 5843455221182451772}
   rightTrail: {fileID: 2198413366462501099}

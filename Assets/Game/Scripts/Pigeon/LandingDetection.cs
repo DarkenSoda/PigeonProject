@@ -1,5 +1,8 @@
 using System;
+using System.Collections;
 using System.Linq;
+using DG.Tweening;
+using PigeonProject.Inputs;
 using PigeonProject.LandingArea;
 using UnityEngine;
 using UnityEngine.Splines;
@@ -13,13 +16,22 @@ namespace PigeonProject.Pigeon
         [SerializeField] private float maxAngle;
         [SerializeField] private LayerMask landingPointMask;
 
-        private SplineAnimate anim;
+        private PigeonAnimation anim;
+        private SplineAnimate splineAnim;
         private Transform nearestLandingPoint = null;
         public Transform NearestLandingPoint { get => nearestLandingPoint; }
 
+        public bool IsGrounded { get; set; }
+
         private void Awake()
         {
-            anim = GetComponent<SplineAnimate>();
+            anim = GetComponentInChildren<PigeonAnimation>();
+            splineAnim = GetComponent<SplineAnimate>();
+        }
+
+        private void Start()
+        {
+            GameInput.Singleton.OnInteract += StartLanding;
         }
 
         private void Update()
@@ -44,7 +56,7 @@ namespace PigeonProject.Pigeon
         {
             if (!nearestLandingPoint)
             {
-                anim.Container = null;
+                splineAnim.Container = null;
                 return;
             }
 
@@ -57,10 +69,45 @@ namespace PigeonProject.Pigeon
         private void SetSplineAnimate(Transform spline)
         {
             SplineContainer container = spline.GetComponent<SplineContainer>();
-            if (anim.Container == container)
+            if (splineAnim.Container == container)
                 return;
 
-            anim.Container = container;
+            splineAnim.Container = container;
+        }
+
+        private void StartLanding()
+        {
+            if (!nearestLandingPoint)
+                return;
+
+            Sequence sequence = DOTween.Sequence();
+            Vector3 pos = splineAnim.Container.transform.TransformPoint(splineAnim.Container.Spline.ToArray()[0].Position);
+            sequence.Append(transform.DOLookAt(pos, .3f, AxisConstraint.Y, Vector3.up));
+            sequence.Append(transform.DOMove(pos, 1f).SetEase(Ease.Linear));
+            sequence.AppendCallback(GoToLandingPoint);
+
+            GetComponent<Flight>().CanMove = false;
+            anim.StartMoving();
+            sequence.Play();
+        }
+
+        private void GoToLandingPoint()
+        {
+            anim.StartLanding();
+            splineAnim.Restart(true);
+            StartCoroutine(LandingFinished());
+        }
+
+        private IEnumerator LandingFinished()
+        {
+            while (splineAnim.NormalizedTime < 1)
+            {
+                yield return null;
+            }
+
+            anim.IdleDuration = 0;
+            anim.OnGrounded();
+            IsGrounded = true;
         }
     }
 }
